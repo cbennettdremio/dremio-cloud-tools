@@ -39,3 +39,14 @@ docker push <private-container-repository>/<custom-image-name>:<custom-version-t
 ```
 
 Once you have your new container image built and pushed, update your `values.local.yaml` file to set the `image` and `imageTag` values as appropriate.
+
+# To import a custom certificate into the Java key store, you can use the following command. This may
+# be required if you have an internal CA for issuing certificates.
+
+```RUN keytool -importkeystore -deststorepass KEYSTORE_PASS -destkeypass KEY_PASS -destkeystore /opt/java/openjdk/jre/lib/security/cacerts -srckeystore /opt/dremio/keystore.p12 -srcstoretype PKCS12 -srcstorepass KEYSTORE_PASS -alias myalias```
+
+
+# If you have a the key and certificate file, the following can be added to the image so the certificate 
+# gets convered to a p12/pfx file.
+
+```RUN openssl pkcs12 -export -in /opt/dremio/certificate.crt -inkey /opt/dremio/key.key -out /opt/dremio/keystore.p12 -name myalias -CAfile /opt/dremio/certificate.crt -caname root -password pass:KEYSTORE_PASS```
